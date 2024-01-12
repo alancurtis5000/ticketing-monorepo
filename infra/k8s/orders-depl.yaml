@@ -1,0 +1,48 @@
+# Define the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders
+  template:
+    metadata:
+      labels:
+        app: orders
+    spec:
+      containers:
+        - name: orders
+          image: alancurtis31/orders # dockerId/imageID
+          env:
+            - name: NATS_CLIENT_ID # since the ID needs to be unique
+              valueFrom: # we use valueFrom instead of value
+                fieldRef: # so we can get the pod name, that is unique
+                  fieldPath: metadata.name # and use it as an environment variable
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
+            - name: MONGO_URI
+              value: "mongodb://orders-mongo-srv:27017/orders"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+# Define the Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-srv
+spec:
+  selector:
+    app: orders
+  ports:
+    - name: orders
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -1,0 +1,3 @@
+this nats-wrapper in the `__mocks__` folder
+is allowing jest to intercept the import statements for this file
+and run a fake version contained in the mocks folder.

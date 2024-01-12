@@ -1,0 +1,3 @@
+next js does magic in the pages folder to make use of routing
+nested route: create a folder and put file name in there
+- next js makes route name off file name

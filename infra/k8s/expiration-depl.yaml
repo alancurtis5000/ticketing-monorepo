@@ -1,0 +1,32 @@
+# Define the deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expiration-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expiration
+  template:
+    metadata:
+      labels:
+        app: expiration
+    spec:
+      containers:
+        - name: expiration
+          image: alancurtis31/expiration
+          env:
+            - name: NATS_CLIENT_ID # since the ID needs to be unique
+              valueFrom: # we use valueFrom instead of value
+                fieldRef: # so we can get the pod name, that is unique
+                  fieldPath: metadata.name # and use it as an environment variable
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
+            - name: REDIS_HOST
+              value: expiration-redis-srv
+# Define the Service
+# No need for a service
+
