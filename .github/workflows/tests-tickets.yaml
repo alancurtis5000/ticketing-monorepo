@@ -1,0 +1,13 @@
+# This workflow runs the tests for each  microservice
+name: tests-tickts
+
+# on any pull request
+on:
+  pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd tickets && npm install && npm run test:ci
