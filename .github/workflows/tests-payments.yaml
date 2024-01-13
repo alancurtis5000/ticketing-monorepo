@@ -1,5 +1,5 @@
 # This workflow runs the tests for each  microservice
-name: tests-tickts
+name: tests-payments
 
 # on any pull request
 on:
@@ -13,4 +13,4 @@ jobs:
       STRIPE_KEY: ${{secrets.STRIPE_KEY}}
     steps:
       - uses: actions/checkout@v2
-      - run: cd tickets && npm install && npm run test:ci
+      - run: cd payments && npm install && npm run test:ci
