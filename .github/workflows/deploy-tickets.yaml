@@ -1,0 +1,27 @@
+# This file will create a new image and push it to docker when code gets merged to master branch
+name: deploy-tickets
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "tickets/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd tickets && docker build -t alancurtis31/tickets .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push alancurtis31/tickets
+      # install and use digital ocean command
+      - uses: digitalocean/action-doctl@v2
+        with:
+          -token: ${{ secrets.DIGITAL_OCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save ticketing
+      - run: kubctl rollout restart deploymnent tickets-depl

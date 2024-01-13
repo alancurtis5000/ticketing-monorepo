@@ -1,0 +1,27 @@
+# This file will create a new image and push it to docker when code gets merged to master branch
+name: deploy-client
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "client/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd client && docker build -t alancurtis31/client .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push alancurtis31/client
+      # install and use digital ocean command
+      - uses: digitalocean/action-doctl@v2
+        with:
+          -token: ${{ secrets.DIGITAL_OCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save ticketing
+      - run: kubctl rollout restart deploymnent client-depl
