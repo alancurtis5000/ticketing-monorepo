@@ -1,5 +1,5 @@
 # This workflow runs the tests for each  microservice
-name: tests-tickts
+name: tests-tickets
 
 # on any pull request
 on:
