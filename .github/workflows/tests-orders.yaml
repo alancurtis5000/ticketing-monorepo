@@ -3,7 +3,9 @@ name: tests-orders
 
 # on any pull request
 on:
-  pull_request
+  pull_request:
+    paths:
+      - "orders/**"
 
 jobs:
   build:
