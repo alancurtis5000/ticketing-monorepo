@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 // use the mocked version of nats wrapper in the __mocks__ dir
 jest.mock("../nats-wrapper.ts");
 
+process.env.STRIPE_KEY = "sk_test_c7MVBsHhjJ1dgOTfNQkoeabk00G1i7V3wz";
+
 let mongo: any;
 // before test start boot up MongoMemoryServer.
 beforeAll(async () => {
