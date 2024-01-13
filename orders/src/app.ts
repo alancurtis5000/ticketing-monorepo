@@ -13,6 +13,15 @@ import { showOrderRouter } from "./routes/show";
 const app = express();
 app.set("trust proxy", true); // express by default does not trust proxy
 app.use(json());
+/* 
+ TODO:527: when adding a domain need to disable https use this cookie session
+app.use(
+  cookieSession({
+    signed: false,
+    secure: false,
+  })
+);
+*/
 app.use(
   cookieSession({
     signed: false, // don't encrypt cookie
